@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashbaord\DashboardController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index']);
+
+Route::get('/admin/dashboard', [DashboardController::class, 'index']);
+Route::get('/admin/dashboard/page', [DashboardController::class, 'page']);
 
 Route::get('/news/latest', [HomeController::class, 'index']);
 //Route::get('/news/{id?}', [HomeController::class, 'news']);
