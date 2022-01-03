@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Dashbaord\DashboardController;
+use App\Http\Controllers\Dashboard\CategoriesController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,11 +18,32 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/admin/dashboard', [DashboardController::class, 'index']);
-Route::get('/admin/dashboard/page', [DashboardController::class, 'page']);
+Route::group([
+    'prefix' => '/dashboard',
+    'as' => 'dashboard.',
+    'namespace' => 'Dashboard',
+], function() {
 
-Route::get('/news/latest', [HomeController::class, 'index']);
-//Route::get('/news/{id?}', [HomeController::class, 'news']);
+    Route::get('/', [DashboardController::class, 'index']);
 
-Route::get('/news/{category}', [HomeController::class, 'news']);
-Route::get('/news/{category}/{id}', [HomeController::class, 'news']);
+    Route::prefix('/categories')->as('categories.')->group(function() {
+        // CRUD: Create, Read, Update and Delete
+        Route::get('/', 'CategoriesController@index')
+            ->name('index');
+
+        Route::get('/create', [CategoriesController::class, 'create'])
+            ->name('create');
+
+        Route::post('/', [CategoriesController::class, 'store'])
+            ->name('store');
+
+        Route::get('/{id}/edit', [CategoriesController::class, 'edit'])
+            ->name('edit');
+
+        Route::put('/{id}', [CategoriesController::class, 'update'])
+            ->name('update');
+
+        Route::delete('/{id}', [CategoriesController::class, 'destroy'])
+            ->name('destroy');
+    });
+});
