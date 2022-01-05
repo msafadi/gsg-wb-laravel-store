@@ -7,13 +7,24 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 
 class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = Category::all(); // Return a Collection
         // $categories = DB::table('categories')->get();
+        $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            ->select([
+                'categories.*',
+                'parents.name as parent_name'
+            ])
+            // ->whereNull('categories.parent_id') // parent_id IS NULL
+            ->orderBy('name')
+            ->get(); // Return a Collection
         
         $title = 'Categories';
 
@@ -26,12 +37,30 @@ class CategoriesController extends Controller
 
         return view('dashboard.categories.create', [
             'parents' => $categories,
+            'category' => new Category(),
         ]);
     }
 
 
     public function store(Request $request)
     {
+        $rules = $this->rules();
+        
+        /*$validator = Validator::make($request->all(), $rules);
+        // $validator->validate();
+        if ($validator->fails()) {
+            // dd ( $validator->errors() );
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }*/
+
+        // Throw ValidationException
+        // $this->validate($request, $rules);
+        $request->validate($rules, [
+            'name.required' => ':attribute required!!',
+        ]);
+
         /*
         $category = new Category();
         $category->name = $request->post('name');
@@ -82,8 +111,11 @@ class CategoriesController extends Controller
         return view('dashboard.categories.edit', compact('category', 'parents'));
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
+        // $rules = $this->rules($id);
+        // $request->validate($rules);
+
         // Method 1
         // $category = Category::find($id);
         // $category->name = $request->post('name');
@@ -118,5 +150,22 @@ class CategoriesController extends Controller
 
         // PRG
         return redirect()->route('dashboard.categories.index');
+    }
+
+    protected function rules($id = 0)
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                //'unique:categories,name,' . $id,
+                Rule::unique('categories', 'name')->ignore($id, 'id'),
+                //(new Unique('categories', 'name'))->ignore($id)
+            ],
+            'parent_id' => 'nullable|int|exists:categories,id',
+            'description' => 'nullable|string|min:5',
+            'image' => 'required|mimes:jpg,png|max:50|dimensions:min_width=150,min_height=150,max_width=300,max_height=300', // 50KB
+        ];
     }
 }
