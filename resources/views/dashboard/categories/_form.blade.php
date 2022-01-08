@@ -32,7 +32,14 @@
         <div class="col-md-4">
             <div class="form-group mb-3">
                 <label for="image">Thumbnail</label>
-                <input type="file" id="image" name="image" class="form-control @error('image') is-invalid @enderror">
+                <div class="mb-2">
+                    @if ($category->image)
+                    <img id="thumbnail" src="{{ Storage::disk('public')->url($category->image) }}" height="150">
+                    @else
+                    <img id="thumbnail" src="{{ asset('images/blank.png') }}" height="150">
+                    @endif
+                </div>
+                <input type="file" style="display: none;" id="image" name="image" class="form-control @error('image') is-invalid @enderror">
                 @error('image')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror
@@ -46,3 +53,18 @@
             </div>
         </div>
     </div>
+
+@push('scripts')
+<script>
+    document.getElementById('thumbnail').addEventListener('click', function(e) {
+        document.getElementById('image').click();
+    });
+
+    document.getElementById('image').addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            document.getElementById('thumbnail').src = URL.createObjectURL(this.files[0]);
+        }
+    });
+
+</script>
+@endpush

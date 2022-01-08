@@ -28,7 +28,13 @@
         <tbody>
             @foreach($categories as $category)
             <tr>
-                <td>{{ $category->image }}</td>
+                <td>
+                    @if ($category->image)
+                    <img src="{{ Storage::disk('public')->url($category->image) }}" height="60">
+                    @else
+                    <img src="{{ asset('images/blank.png') }}" height="60">
+                    @endif
+                </td>
                 <td>{{ $category->id }}</td>
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->parent_name }}</td>

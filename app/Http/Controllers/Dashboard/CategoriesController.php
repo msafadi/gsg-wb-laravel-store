@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Unique;
+use Illuminate\Validation\ValidationException;
 
 class CategoriesController extends Controller
 {
@@ -86,11 +89,16 @@ class CategoriesController extends Controller
         ])->save();
         */
 
-        // Mass assignment
-        $request->merge([
-            'slug' => Str::slug($request->post('name')),
-        ]);
-        $category = Category::create($request->all());
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $data['image'] = $this->upload($file);
+        }
+
+        $data['slug'] = Str::slug($data['name']);
+
+        $category = Category::create($data);
 
         // PRG: Post Redirect Get
         return redirect()->route('dashboard.categories.index');
@@ -122,14 +130,26 @@ class CategoriesController extends Controller
         // $category->parent_id = $request->post('parent_id');
         // $category->description = $request->post('description');
         // $category->save();
-        
-        $request->merge([
-            'slug' => Str::slug($request->post('name')),
-        ]);
-        
+
         // Method 2
         $category = Category::find($id);
-        $category->update($request->all());
+        
+        $data = $request->except('image');
+        $data['slug'] = Str::slug($data['name']);
+
+        $old_image = $category->image;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $data['image'] = $this->upload($file);
+        }
+        
+        $category->update($data);
+        
+        if ($old_image && $old_image != $category->image) {
+            Storage::disk('public')->delete($old_image);
+        }
+
         // $category->forceFill($request->all)->save();
 
         // Method 3
@@ -141,12 +161,15 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
-        // $category = Category::find($id);
-        // $category->delete();
+        $category = Category::find($id);
+        $category->delete();
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
 
         // Category::where('id', '=', $id)->delete();
         
-        Category::destroy($id);
+        // Category::destroy($id);
 
         // PRG
         return redirect()->route('dashboard.categories.index');
@@ -165,7 +188,20 @@ class CategoriesController extends Controller
             ],
             'parent_id' => 'nullable|int|exists:categories,id',
             'description' => 'nullable|string|min:5',
-            'image' => 'required|mimes:jpg,png|max:50|dimensions:min_width=150,min_height=150,max_width=300,max_height=300', // 50KB
+            'image' => 'required|image', //'|max:50|dimensions:min_width=150,min_height=150,max_width=300,max_height=300', // 50KB
         ];
+    }
+
+    protected function upload(UploadedFile $file)
+    {
+        if ($file->isValid()) {
+            return $file->store('thumbnails', [
+                'disk' => 'public',
+            ]);
+        } else {
+            throw ValidationException::withMessages([
+                'image' => 'File corrupted!',
+            ]);
+        }
     }
 }

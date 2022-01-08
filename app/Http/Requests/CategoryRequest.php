@@ -37,7 +37,7 @@ class CategoryRequest extends FormRequest
             ],
             'parent_id' => 'nullable|int|exists:categories,id',
             'description' => 'nullable|string|min:5',
-            'image' => 'required|mimes:jpg,png|max:50|dimensions:min_width=150,min_height=150,max_width=300,max_height=300', // 50KB
+            'image' => 'nullable|image', //'|max:50|dimensions:min_width=150,min_height=150,max_width=300,max_height=300', // 50KB
         ];
     }
 
