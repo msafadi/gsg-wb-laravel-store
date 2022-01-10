@@ -9,8 +9,37 @@
 
 @section('content')
 
-<div class="table-toolbar mb-3">
-    <a href="{{ route('dashboard.categories.create') }}" class="btn btn-sm btn-outline-primary">Create</a>
+@if(Session::has('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ Session::get('success') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
+@if(Session::has('message'))
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    {{ Session::get('message') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+    @php
+        session()->remove('message');
+    @endphp
+@endif
+
+<div class="table-toolbar mb-3 d-flex justify-content-between">
+    <div class="">
+        <form action="{{ route('dashboard.categories.index') }}" class="d-flex" method="get">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control">
+            <button type="submit" class="btn btn-dark ml-2">Search</button>
+        </form>
+    </div>
+    <div class="">
+        <a href="{{ route('dashboard.categories.create') }}" class="btn btn-sm btn-outline-primary">Create</a>
+        <a href="{{ route('dashboard.categories.trash') }}" class="btn btn-sm btn-outline-success">Trash</a>
+    </div>
 </div>
 
 <div class="table-responsive">
@@ -37,7 +66,7 @@
                 </td>
                 <td>{{ $category->id }}</td>
                 <td>{{ $category->name }}</td>
-                <td>{{ $category->parent_name }}</td>
+                <td>{{ $category->parent_name ?? '' }}</td>
                 <td>{{ $category->created_at }}</td>
                 <td>
                     <a href="{{ route('dashboard.categories.edit', [$category->id]) }}" class="btn btn-sm btn-outline-success">Edit</a>
@@ -56,3 +85,12 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    window.setTimeout(function() {
+        $('.alert').alert('close')
+    }, 5000);
+</script>
+@endpush
+

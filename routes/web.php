@@ -31,6 +31,9 @@ Route::group([
         Route::get('/', 'CategoriesController@index')
             ->name('index');
 
+        Route::get('/trash', [CategoriesController::class, 'trash'])
+            ->name('trash');
+
         Route::get('/create', [CategoriesController::class, 'create'])
             ->name('create');
 
@@ -45,5 +48,9 @@ Route::group([
 
         Route::delete('/{id}', [CategoriesController::class, 'destroy'])
             ->name('destroy');
+
+        Route::patch('/{id}/restore', [CategoriesController::class, 'restore'])
+            ->name('restore');
+
     });
 });

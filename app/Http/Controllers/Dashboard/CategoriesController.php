@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use App\Models\Scopes\MainCategoryScope;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -17,21 +19,26 @@ use Illuminate\Validation\ValidationException;
 
 class CategoriesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // $categories = DB::table('categories')->get();
-        $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
-            ->select([
-                'categories.*',
-                'parents.name as parent_name'
-            ])
-            // ->whereNull('categories.parent_id') // parent_id IS NULL
+        $search = $request->query('search'); // ?search=watch
+
+        // $categories = DB::table('categories')->whereNull('deleted_at')->get();
+        $categories = Category::withoutGlobalScope(MainCategoryScope::class)
+            ->search($search)
+            //->parent(6)
             ->orderBy('name')
             ->get(); // Return a Collection
         
         $title = 'Categories';
 
         return view('dashboard.categories.index', compact('title', 'categories'));
+    }
+
+    public function trash()
+    {
+        $categories = Category::onlyTrashed()->latest('deleted_at')->get();
+        return view('dashboard.categories.trash', compact('categories'));
     }
 
     public function create()
@@ -101,12 +108,14 @@ class CategoriesController extends Controller
         $category = Category::create($data);
 
         // PRG: Post Redirect Get
-        return redirect()->route('dashboard.categories.index');
+        return redirect()
+            ->route('dashboard.categories.index')
+            ->with('success', "Category ($category->name) created");
     }
 
     public function edit($id)
     {
-        //$category = Category::where('id', '=', $id)->firstOrFail();
+        // $category = Category::where('id', '=', $id)->dd();
         $category = Category::findOrFail($id);
         // if ($category == null) {
         //     return abort(404);
@@ -132,7 +141,7 @@ class CategoriesController extends Controller
         // $category->save();
 
         // Method 2
-        $category = Category::find($id);
+        $category = Category::findOrFail($id);
         
         $data = $request->except('image');
         $data['slug'] = Str::slug($data['name']);
@@ -156,15 +165,23 @@ class CategoriesController extends Controller
         // Category::where('id', '=', $id)->update($request->except('_token', '_method'));
 
         // PRG
-        return redirect()->route('dashboard.categories.index');
+        session()->put('message', "Category ($category->name) updated");
+
+        return redirect()
+            ->route('dashboard.categories.index')
+            ->with('success', "Category ($category->name) updated");
     }
 
     public function destroy($id)
     {
-        $category = Category::find($id);
-        $category->delete();
-        if ($category->image) {
-            Storage::disk('public')->delete($category->image);
+        $category = Category::withTrashed()->findOrFail($id);
+        if ($category->trashed()) {
+            $category->forceDelete();
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+        } else {
+            $category->delete();
         }
 
         // Category::where('id', '=', $id)->delete();
@@ -172,7 +189,9 @@ class CategoriesController extends Controller
         // Category::destroy($id);
 
         // PRG
-        return redirect()->route('dashboard.categories.index');
+        return redirect()
+            ->route('dashboard.categories.index')
+            ->with('success', "Category ($category->name) deleted");
     }
 
     protected function rules($id = 0)
@@ -203,5 +222,16 @@ class CategoriesController extends Controller
                 'image' => 'File corrupted!',
             ]);
         }
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+
+        // PRG
+        return redirect()
+            ->route('dashboard.categories.index')
+            ->with('success', "Category ($category->name) restored");
     }
 }
