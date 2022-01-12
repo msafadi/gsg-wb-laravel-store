@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ProductsController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,10 +27,19 @@ Route::group([
 
     Route::get('/', [DashboardController::class, 'index']);
 
+    Route::get('/products/trash', [ProductsController::class, 'trash'])
+        ->name('products.trash');
+    Route::patch('/products/{product}/restore', [ProductsController::class, 'restore'])
+        ->name('products.restore');
+    Route::resource('/products', 'ProductsController')->names([
+        'index' => 'products.index',
+        'show' => 'products.show',
+    ]);
+
     Route::prefix('/categories')->as('categories.')->group(function() {
         // CRUD: Create, Read, Update and Delete
         Route::get('/', 'CategoriesController@index')
-            ->name('index');
+            ->name('index'); //dashboard.categories.index
 
         Route::get('/trash', [CategoriesController::class, 'trash'])
             ->name('trash');
