@@ -9,25 +9,7 @@
 
 @section('content')
 
-@if(Session::has('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{ Session::get('success') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-@endif
-@if(Session::has('message'))
-<div class="alert alert-info alert-dismissible fade show" role="alert">
-    {{ Session::get('message') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-    @php
-        session()->remove('message');
-    @endphp
-@endif
+<x-flash-message class="info" />
 
 <div class="table-toolbar mb-3 d-flex justify-content-between">
     <div class="">
@@ -85,12 +67,4 @@
 </div>
 
 @endsection
-
-@push('scripts')
-<script>
-    window.setTimeout(function() {
-        $('.alert').alert('close')
-    }, 5000);
-</script>
-@endpush
 

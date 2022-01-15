@@ -103,8 +103,6 @@ class CategoriesController extends Controller
             $data['image'] = $this->upload($file);
         }
 
-        $data['slug'] = Str::slug($data['name']);
-
         $category = Category::create($data);
 
         // PRG: Post Redirect Get
@@ -144,8 +142,7 @@ class CategoriesController extends Controller
         $category = Category::findOrFail($id);
         
         $data = $request->except('image');
-        $data['slug'] = Str::slug($data['name']);
-
+        
         $old_image = $category->image;
 
         if ($request->hasFile('image')) {

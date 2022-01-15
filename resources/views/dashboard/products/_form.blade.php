@@ -2,11 +2,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="form-group mb-3">
-                <label for="name">Product Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" class="form-control @error('name') is-invalid @enderror">
-                @error('name')
-                <p class="invalid-feedback">{{ $message }}</p>
-                @enderror
+                <x-form.input required="1" name="name" :value="$product->name" class="form-control-lg" label="Product Name" />
             </div>
             <div class="form-group mb-3">
                 <label for="category_id">Category</label>
@@ -21,39 +17,23 @@
                 @enderror
             </div>
             <div class="form-group mb-3">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description', $category->description) }}</textarea>
-                @error('description')
-                <p class="invalid-feedback">{{ $message }}</p>
-                @enderror
+                <x-form.textarea label="Description" name="description" :value="$product->description" />
             </div>
 
             <div class="form-row">
                 <div class="col-md-4">
                     <div class="form-group mb-3">
-                        <label for="price">Price</label>
-                        <input type="number" step="0.1" id="price" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $product->price) }}">
-                        @error('price')
-                        <p class="invalid-feedback">{{ $message }}</p>
-                        @enderror
+                        <x-form.input type="number" step="0.1" name="price" :value="$product->price" label="Price" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group mb-3">
-                        <label for="compare_price">Compare Price</label>
-                        <input type="number" step="0.1" id="compare_price" name="compare_price" class="form-control @error('compare_price') is-invalid @enderror" value="{{ old('compare_price', $product->compare_price) }}">
-                        @error('compare_price')
-                        <p class="invalid-feedback">{{ $message }}</p>
-                        @enderror
+                        <x-form.input type="number" step="0.1" name="compare_price" :value="$product->compare_price" label="Compare Price" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group mb-3">
-                        <label for="cost">Cost</label>
-                        <input type="number" step="0.1" id="cost" name="cost" class="form-control @error('cost') is-invalid @enderror" value="{{ old('cost', $product->cost) }}">
-                        @error('cost')
-                        <p class="invalid-feedback">{{ $message }}</p>
-                        @enderror
+                        <x-form.input type="number" step="0.1" name="cost" :value="$product->cost" label="Cost" />
                     </div>
                 </div>
             </div>

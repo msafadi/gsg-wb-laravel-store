@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Scopes\MainCategoryScope;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -30,6 +32,15 @@ class Category extends Model
         //             'parents.name as parent_name'
         //         ]);
         // });
+        static::forceDeleted(function($category) {
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+        });
+
+        static::saving(function($category) {
+            $category->slug = Str::slug($category->name);
+        });
     }
 
     public function scopeSearch(Builder $builder, $value)

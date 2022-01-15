@@ -51,8 +51,7 @@ class ProductsController extends Controller
         $request->validate($rules);
 
         $data = $request->except('image');
-        $data['slug'] = Str::slug($data['name']);
-
+        
         if ($request->hasFile('image')) {
             $data['image'] = $this->upload($request->file('image'));
         }
@@ -109,7 +108,6 @@ class ProductsController extends Controller
         $request->validate($rules);
 
         $data = $request->except('image');
-        $data['slug'] = Str::slug($data['name']);
         if ($request->hasFile('image')) {
             $data['image'] = $this->upload($request->file('image'));
         }
@@ -138,9 +136,6 @@ class ProductsController extends Controller
         $product = Product::withTrashed()->findOrFail($id);
         if ($product->trashed()) {
             $product->forceDelete();
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
         } else {
             $product->delete();
         }
