@@ -176,7 +176,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        @auth
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        | <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout').submit()">Logout</a>
+                        <form id="logout" method="POST" action="{{ route('logout') }}" style="display: none;">
+                            @csrf
+                        </form>
+                        @else
+                        <a href="{{ route('login') }}">Login</a>
+                        @endauth
                     </div>
                 </div>
 

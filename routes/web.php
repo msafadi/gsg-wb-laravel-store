@@ -23,6 +23,7 @@ Route::group([
     'prefix' => '/dashboard',
     'as' => 'dashboard.',
     'namespace' => 'Dashboard',
+    'middleware' => ['auth'],
 ], function() {
 
     Route::get('/', [DashboardController::class, 'index']);
@@ -64,3 +65,9 @@ Route::group([
 
     });
 });
+
+Route::get('/dashboard/breeze', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
