@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
@@ -14,7 +15,7 @@ class ProductsController extends Controller
 
     public function __construct()
     {
-        // $this->middleware(['auth'])->only(['index', 'create']);
+        $this->middleware(['verified'])->except(['index', 'show']);
     }
 
     /**
