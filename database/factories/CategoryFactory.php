@@ -14,11 +14,9 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-        $name = $this->faker->words(3, true);
         return [
             'parent_id' => null,
-            'name' => $name, // 'Loren Ipsom wat'
-            'slug' => Str::slug($name), // 'loren-ipsom-wat'
+            'name' => $this->faker->department,
             'description' => $this->faker->text(),
             'image' => $this->faker->imageUrl(),
         ];

@@ -52,4 +52,23 @@ class Product extends Model
             'back-order' => 'Back-Order'
         ];
     }
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return asset('images/blank.png');
+        }
+        if (Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+        return Storage::disk('public')->url($this->image);
+    }
+
+    public function getDiscountPercentAttribute()
+    {
+        if (!$this->compare_price) {
+            return 0;
+        }
+        return number_format($this->price / $this->compare_price * 100, 1);
+    }
 }

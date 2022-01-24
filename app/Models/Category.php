@@ -54,4 +54,29 @@ class Category extends Model
     {
         $builder->where('categories.parent_id', '=', $parent_id);
     }
+
+    // Accessors: get{NAME}Attribute
+    // $category->image_url
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return asset('images/blank.png');
+        }
+        if (Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+        return Storage::disk('public')->url($this->image);
+    }
+
+    public function getNameAttribute($value)
+    {
+        return Str::title($value);
+    }
+
+    // Mutators: set{NAME}Atrribute
+    // $category->name = 'Value';
+    // public function setNameAttribute($value)
+    // {
+    //     $this->attributes['name'] = Str::upper($value); // VALUE
+    // }
 }

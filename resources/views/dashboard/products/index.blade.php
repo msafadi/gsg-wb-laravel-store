@@ -48,11 +48,7 @@
             @foreach($products as $product)
             <tr>
                 <td>
-                    @if ($product->image)
-                    <img src="{{ Storage::disk('public')->url($product->image) }}" height="60">
-                    @else
-                    <img src="{{ asset('images/blank.png') }}" height="60">
-                    @endif
+                    <img src="{{ $product->image_url }}" height="60">
                 </td>
                 <td>{{ $product->id }}</td>
                 <td>{{ $product->name }}</td>

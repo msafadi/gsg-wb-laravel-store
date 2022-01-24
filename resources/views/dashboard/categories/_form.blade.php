@@ -33,11 +33,7 @@
             <div class="form-group mb-3">
                 <label for="image">Thumbnail</label>
                 <div class="mb-2">
-                    @if ($category->image)
-                    <img id="thumbnail" src="{{ Storage::disk('public')->url($category->image) }}" height="150">
-                    @else
-                    <img id="thumbnail" src="{{ asset('images/blank.png') }}" height="150">
-                    @endif
+                    <img id="thumbnail" src="{{ $category->image_url }}" height="150">
                 </div>
                 <input type="file" style="display: none;" id="image" name="image" class="form-control @error('image') is-invalid @enderror">
                 @error('image')

@@ -40,11 +40,7 @@
             @foreach($categories as $category)
             <tr>
                 <td>
-                    @if ($category->image)
-                    <img src="{{ Storage::disk('public')->url($category->image) }}" height="60">
-                    @else
-                    <img src="{{ asset('images/blank.png') }}" height="60">
-                    @endif
+                    <img src="{{ $category->image_url }}" height="60">
                 </td>
                 <td>{{ $category->id }}</td>
                 <td>{{ $category->name }}</td>
