@@ -18,6 +18,10 @@ class Product extends Model
         'quantity', 'availability', 'status', 'image', 'sku', 'barcode'
     ];
 
+    // protected $with = [
+    //     'category'
+    // ];
+
     protected static function booted()
     {
         /*
@@ -33,6 +37,13 @@ class Product extends Model
         static::saving(function($product) {
             $product->slug = Str::slug($product->name);
         });
+    }
+
+    // Inverse One-to-Many: Product Belongs To Category
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class);
     }
 
     public static function statusOptions()

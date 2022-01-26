@@ -12,7 +12,7 @@
         @endif
         <a class="ps-shoe__favorite" href="#"><i class="ps-icon-heart"></i></a>
         <img src="{{ $product->image_url }}" alt="">
-        <a class="ps-shoe__overlay" href="product-detail.html"></a>
+        <a class="ps-shoe__overlay" href="{{ route('products.show', [$product->category->slug, $product->slug]) }}"></a>
     </div>
     <div class="ps-shoe__content">
         <div class="ps-shoe__variants">
@@ -33,13 +33,13 @@
         <div class="ps-shoe__detail">
             <a class="ps-shoe__name" href="#">{{ $product->name }}</a>
             <p class="ps-shoe__categories">
-                <a href="#">Men shoes</a>,<a href="#"> Nike</a>,<a href="#"> Jordan</a>
+                <a href="{{ route('products', $product->category->slug) }}">{{ $product->category->name }}</a>
             </p>
             <span class="ps-shoe__price">
                 @if ($product->compare_price)
-                <del>$ {{ $product->compare_price }}</del>
+                <del>{{ Money::format($product->compare_price) }}</del>
                 @endif
-                $ {{ $product->price }}
+                {{ Money::format($product->price) }}
             </span>
         </div>
     </div>
