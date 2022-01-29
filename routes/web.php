@@ -33,7 +33,8 @@ Route::group([
     'middleware' => ['auth'],
 ], function() {
 
-    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('index');
 
     Route::get('/products/trash', [ProductsController::class, 'trash'])
         ->name('products.trash');

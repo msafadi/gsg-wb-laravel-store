@@ -22,7 +22,7 @@ class ProductFactory extends Factory
             'price' => $this->faker->randomFloat(0, 0, 999),
             'compare_price' => $this->faker->randomFloat(0, 999, 1999),
             'quantity' => $this->faker->randomDigitNotNull(),
-            'sku' => $this->faker->word(),
+            'sku' => $this->faker->unique()->word(),
         ];
     }
 }
