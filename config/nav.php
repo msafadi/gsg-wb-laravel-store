@@ -3,7 +3,7 @@
 return [
     'dashboard' => [
         'title' => 'Dashboard',
-        'icon' => 'far fa-circle nav-icon',
+        'icon' => 'fas fa-tachometer-alt nav-icon',
         'route.active' => 'dashboard.index',
         'route' => function () {
             return route('dashboard.index');
@@ -11,19 +11,19 @@ return [
     ],
     'categories' => [
         'title' => 'Categories',
-        'icon' => 'far fa-circle nav-icon',
+        'icon' => 'fas fa-tags nav-icon',
         'route.active' => 'dashboard.categories.*',
         'route' => fn() => route('dashboard.categories.index'),
     ],
     'products' => [
         'title' => 'Products',
-        'icon' => 'far fa-circle nav-icon',
+        'icon' => 'fas fa-box nav-icon',
         'route.active' => 'dashboard.products.*',
         'route' => fn() => route('dashboard.products.index'),
     ],
     'orders' => [
         'title' => 'Orders',
-        'icon' => 'far fa-circle nav-icon',
+        'icon' => 'fas fa-shopping-bag nav-icon',
         'route.active' => 'dashboard.orders.*',
         'route' => '/dashboard/orders',
         'badge' => [
@@ -33,7 +33,7 @@ return [
     ],
     'settings' => [
         'title' => 'Settings',
-        'icon' => 'far fa-circle nav-icon',
+        'icon' => 'fas fa-cogs nav-icon',
         'route.active' => 'dashboard.settings',
         'route' => '/dashboard/settings',
         'badge' => null,

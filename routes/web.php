@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ChangeUserPasswordController;
 use App\Http\Controllers\Auth\UserProfileController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductsController;
@@ -25,6 +26,9 @@ Route::get('/products/{category:slug?}', [StoreProductsController::class, 'index
     ->name('products');
 Route::get('/products/{category:slug}/{product:slug}', [StoreProductsController::class, 'show'])
     ->name('products.show');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart', [CartController::class, 'store']);
 
 Route::group([
     'prefix' => '/dashboard',

@@ -60,6 +60,18 @@ class Product extends Model
         );
     }
 
+    public function cartUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'carts',
+            'product_id',
+            'user_id',
+            'id',
+            'id'
+        );
+    }
+
     public static function statusOptions()
     {
         return [
@@ -95,5 +107,10 @@ class Product extends Model
             return 0;
         }
         return number_format(($this->compare_price - $this->price) / $this->compare_price * 100, 1);
+    }
+
+    public function getUrlAttribute()
+    {
+        return route('products.show', [$this->category->slug, $this->slug]);
     }
 }

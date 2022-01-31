@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\Paginator;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +18,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('cart.cookie_id', function() {
+            $cookie_id = Cookie::get('cart_id');
+            if (!$cookie_id) {
+                $cookie_id = Str::uuid();
+                Cookie::queue('cart_id', $cookie_id, 24 * 60 * 30);
+            }
+            return $cookie_id;
+        });
     }
 
     /**
