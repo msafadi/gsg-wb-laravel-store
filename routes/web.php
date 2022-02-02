@@ -29,6 +29,7 @@ Route::get('/products/{category:slug}/{product:slug}', [StoreProductsController:
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart', [CartController::class, 'store']);
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::group([
     'prefix' => '/dashboard',

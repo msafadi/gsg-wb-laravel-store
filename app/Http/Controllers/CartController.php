@@ -3,48 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Repositories\Cart\CartRepository;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
-    // List of cart products (items)
-    public function index()
-    {
 
+    // List of cart products (items)
+    public function index(CartRepository $cart)
+    {
+        return view('store.cart', [
+            'cart' => $cart
+        ]);
     }
 
     // Add product to cart
-    public function store(Request $request)
+    public function store(Request $request, CartRepository $cart)
     {
         $request->validate([
             'product_id' => ['required', 'int', 'exists:products,id'],
             'quantity' => ['int', 'min:1'],
         ]);
 
-        // app()->make('cart.cookie_id')
-        // App::make('cart.cookie_id')
-        $cookie_id = app('cart.cookie_id');
-
-        $cart = Cart::where([
-            'cookie_id' => $cookie_id,
-            'product_id' => $request->post('product_id'),
-        ])->first();
-
-        if (!$cart) {
-            Cart::create([
-                'id' => Str::uuid(),
-                'cookie_id' => $cookie_id,
-                'user_id' => Auth::id(),
-                'product_id' => $request->post('product_id'),
-                'quantity' => $request->post('quantity', 1),
-            ]);
-        } else {
-            $cart->increment('quantity', $request->post('quantity', 1));
-        }
+        $cart->add($request->post('product_id'), $request->post('quantity'));
 
         return redirect()->back()->with('success', 'Product added to cart');
+    }
+
+    public function destroy(CartRepository $cart, $id)
+    {
+        $cart->remove($id);
+        return redirect()->back()
+            ->with('success', 'Item removed from the cart');
     }
 }

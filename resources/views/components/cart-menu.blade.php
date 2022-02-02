@@ -17,6 +17,6 @@
             <p>Number of items: <span>{{ $cart->count() }}</span></p>
             <p>Item Total: <span>{{ Money::format($total) }}</span></p>
         </div>
-        <div class="ps-cart__footer"><a class="ps-btn" href="cart.html">Check out<i class="ps-icon-arrow-left"></i></a></div>
+        <div class="ps-cart__footer"><a class="ps-btn" href="{{ route('cart') }}">Check out<i class="ps-icon-arrow-left"></i></a></div>
     </div>
 </div>
