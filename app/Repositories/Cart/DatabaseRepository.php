@@ -19,13 +19,15 @@ class DatabaseRepository implements CartRepository
 
     public function all()
     {
-        $id = Auth::id();
-        $this->items = Cart::with('product')
-            ->where('cookie_id', '=', $this->cookie_id)
-            ->when($id, function($query, $id) {
-                $query->where('user_id', $id);
-            })
-            ->get();
+        if ($this->items === null) {
+            $id = Auth::id();
+            $this->items = Cart::with('product')
+                ->where('cookie_id', '=', $this->cookie_id)
+                ->when($id, function($query, $id) {
+                    $query->orWhere('user_id', $id);
+                })
+                ->get();
+        }
 
         return $this->items;
     }
@@ -69,8 +71,16 @@ class DatabaseRepository implements CartRepository
 
     public function total()
     {
-        return $this->items->sum(function($item) {
+        return $this->all()->sum(function($item) {
             return $item->product->price * $item->quantity;
         });
+    }
+
+    public function setUserId($id)
+    {
+        Cart::where('cookie_id', '=', $this->cookie_id)
+            ->update([
+                'user_id' => $id
+            ]);
     }
 }

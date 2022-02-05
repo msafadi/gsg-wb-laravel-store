@@ -3,12 +3,15 @@
 use App\Http\Controllers\Auth\ChangeUserPasswordController;
 use App\Http\Controllers\Auth\UserProfileController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController as StoreProductsController;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +34,9 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart', [CartController::class, 'store']);
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store']);
+
 Route::group([
     'prefix' => '/dashboard',
     'as' => 'dashboard.',
@@ -45,6 +51,7 @@ Route::group([
         ->name('products.trash');
     Route::patch('/products/{product}/restore', [ProductsController::class, 'restore'])
         ->name('products.restore');
+
     Route::resource('/products', 'ProductsController')->names([
         'index' => 'products.index',
         'show' => 'products.show',
@@ -98,3 +105,15 @@ Route::get('/dashboard/breeze', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/images/{image}', function($image) {
+
+    //$path = storage_path('app/dummy.txt');
+    if (!Storage::exists($image)) {
+        abort(404);
+    }
+    return Response::file(Storage::path($image));
+
+    //return Storage::download('dummy.txt');
+});
