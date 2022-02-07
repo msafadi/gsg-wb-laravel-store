@@ -6,41 +6,49 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                         <div class="ps-checkout__billing">
-                            <h3>Billing Detail</h3>
+                            <h3>Shipping Detail</h3>
                             <div class="form-group form-group--inline">
                                 <label>First Name<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <x-form.input name="shipping[first_name]" :value="$user->profile->first_name" />
                             </div>
                             <div class="form-group form-group--inline">
                                 <label>Last Name<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <x-form.input name="shipping[last_name]" :value="$user->profile->last_name" />
                             </div>
                             <div class="form-group form-group--inline">
-                                <label>Company Name<span>*</span>
+                                <label>Phone Number<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <x-form.input name="shipping[phone_number]" />
                             </div>
                             <div class="form-group form-group--inline">
                                 <label>Email Address<span>*</span>
                                 </label>
-                                <input class="form-control" type="email">
+                                <x-form.input name="shipping[email]" :value="$user->email" />
                             </div>
                             <div class="form-group form-group--inline">
-                                <label>Company Name<span>*</span>
+                                <label>Street Address<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <x-form.input name="shipping[street]" :value="$user->profile->address" />
                             </div>
                             <div class="form-group form-group--inline">
-                                <label>Phone<span>*</span>
+                                <label>City<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <x-form.input name="shipping[city]" :value="$user->profile->city" />
                             </div>
                             <div class="form-group form-group--inline">
-                                <label>Address<span>*</span>
+                                <label>Country<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <select name="shipping[country_code]" id="country_code">
+                                    <option value="">Select Country</option>
+                                    @foreach(Symfony\Component\Intl\Countries::getNames() as $code => $name)
+                                        @if ($code == 'IL')
+                                            @continue
+                                        @endif
+                                    <option value="{{ $code }}" @if(old('shipping.country_code', $user->profile->country_code) == $code) selected @endif>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
                                 <div class="ps-checkbox">

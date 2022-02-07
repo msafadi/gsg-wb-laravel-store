@@ -56,17 +56,24 @@ class DatabaseRepository implements CartRepository
 
     public function remove($id)
     {
-        Cart::where([
+        $id = Auth::id();
+        Cart::when($id, function($query, $id) {
+            $query->orWhere('user_id', $id);
+        })
+        ->where([
             'id' => $id,
             'cookie_id' => $this->cookie_id,
-        ])->delete();
+        ])
+        ->delete();
     }
 
     public function empty()
     {
-        Cart::where([
-            'cookie_id' => $this->cookie_id,
-        ])->delete();
+        $id = Auth::id();
+        Cart::where('cookie_id', '=', $this->cookie_id)
+            ->when($id, function($query, $id) {
+                $query->orWhere('user_id', $id);
+            })->delete();
     }
 
     public function total()

@@ -27,6 +27,6 @@ class SendOrderCreatedEmailToAdmin
      */
     public function handle(OrderCreated $event)
     {
-        dd('Email sent!', $event->total);
+        
     }
 }
