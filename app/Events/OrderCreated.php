@@ -24,7 +24,7 @@ class OrderCreated
      */
     public function __construct(Order $order)
     {
-        $this->total = $order;
+        $this->order = $order;
     }
 
     /**

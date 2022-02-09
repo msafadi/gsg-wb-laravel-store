@@ -17,16 +17,25 @@ class DatabaseRepository implements CartRepository
         $this->cookie_id = $cookie_id;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function query()
+    {
+        $id = Auth::id();
+        $query = Cart::with('product');
+        if ($id) {
+            $query->where('user_id', '=', $id);
+        } else {
+            $query->where('cookie_id', '=', $this->cookie_id);
+        }
+        return $query;
+    }
+
     public function all()
     {
         if ($this->items === null) {
-            $id = Auth::id();
-            $this->items = Cart::with('product')
-                ->where('cookie_id', '=', $this->cookie_id)
-                ->when($id, function($query, $id) {
-                    $query->orWhere('user_id', $id);
-                })
-                ->get();
+            $this->items = $this->query()->get();
         }
 
         return $this->items;
@@ -36,10 +45,7 @@ class DatabaseRepository implements CartRepository
     {
         $cookie_id = $this->cookie_id;
 
-        $cart = Cart::where([
-            'cookie_id' => $cookie_id,
-            'product_id' => $item,
-        ])->first();
+        $cart = $this->query()->where('product_id', '=', $item)->first();
 
         if (!$cart) {
             Cart::create([
@@ -56,24 +62,12 @@ class DatabaseRepository implements CartRepository
 
     public function remove($id)
     {
-        $id = Auth::id();
-        Cart::when($id, function($query, $id) {
-            $query->orWhere('user_id', $id);
-        })
-        ->where([
-            'id' => $id,
-            'cookie_id' => $this->cookie_id,
-        ])
-        ->delete();
+        $this->query()->where('id', '=', $id)->delete();
     }
 
     public function empty()
     {
-        $id = Auth::id();
-        Cart::where('cookie_id', '=', $this->cookie_id)
-            ->when($id, function($query, $id) {
-                $query->orWhere('user_id', $id);
-            })->delete();
+        $this->query()->delete();
     }
 
     public function total()
@@ -86,6 +80,7 @@ class DatabaseRepository implements CartRepository
     public function setUserId($id)
     {
         Cart::where('cookie_id', '=', $this->cookie_id)
+            ->whereNull('user_id') // user_id IS NULL
             ->update([
                 'user_id' => $id
             ]);
