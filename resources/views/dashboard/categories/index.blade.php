@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', $title)
+@section('title', __('Categories'))
 
 @section('breadcrumb')
     @parent
-    <li class="breadcrumb-item active">Categories</li>
+    <li class="breadcrumb-item active">{{ __('Categories') }}</li>
 @endsection
 
 @section('content')
@@ -15,12 +15,12 @@
     <div class="">
         <form action="{{ route('dashboard.categories.index') }}" class="d-flex" method="get">
             <input type="text" name="search" value="{{ request('search') }}" class="form-control">
-            <button type="submit" class="btn btn-dark ml-2">Search</button>
+            <button type="submit" class="btn btn-dark ml-2">{{ trans('Search') }}</button>
         </form>
     </div>
     <div class="">
-        <a href="{{ route('dashboard.categories.create') }}" class="btn btn-sm btn-outline-primary">Create</a>
-        <a href="{{ route('dashboard.categories.trash') }}" class="btn btn-sm btn-outline-success">Trash</a>
+        <a href="{{ route('dashboard.categories.create') }}" class="btn btn-sm btn-outline-primary">{{ __('Create') }}</a>
+        <a href="{{ route('dashboard.categories.trash') }}" class="btn btn-sm btn-outline-success">{{ __('Trash') }}</a>
     </div>
 </div>
 
@@ -29,11 +29,11 @@
         <thead>
             <tr>
                 <th></th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Parent</th>
-                <th>Created At</th>
-                <th colspan="2">Actions</th>
+                <th>{{ Lang::get('ID') }}</th>
+                <th>{{ trans('Name') }}</th>
+                <th>{{ __('Parent') }}</th>
+                <th>@lang('Created At')</th>
+                <th colspan="2">{{ __('app.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -47,13 +47,13 @@
                 <td>{{ $category->parent_name ?? '' }}</td>
                 <td>{{ $category->created_at }}</td>
                 <td>
-                    <a href="{{ route('dashboard.categories.edit', [$category->id]) }}" class="btn btn-sm btn-outline-success">Edit</a>
+                    <a href="{{ route('dashboard.categories.edit', [$category->id]) }}" class="btn btn-sm btn-outline-success">{{ __('Edit') }}</a>
                 </td>
                 <td>
                     <form action="{{ route('dashboard.categories.destroy', $category->id) }}" method="post">
                         @csrf
                         @method('delete')
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('Delete') }}</button>
                     </form>
                 </td>
             </tr>

@@ -133,6 +133,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <i class="fas fa-th-large"></i>
                     </a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        {{ __('Language') }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <a href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}" class="dropdown-item">
+                            {{ $properties['native'] }}
+                        </a>
+                        @endforeach
+                    </div>
+                </li>
             </ul>
         </nav>
         <!-- /.navbar -->

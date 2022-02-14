@@ -2,14 +2,14 @@
     <div class="row">
         <div class="col-md-8">
             <div class="form-group mb-3">
-                <label for="name">Category Name</label>
+                <label for="name">{{ __('Name') }}</label>
                 <input type="text" id="name" name="name" value="{{ old('name', $category->name) }}" class="form-control @error('name') is-invalid @enderror">
                 @error('name')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror
             </div>
             <div class="form-group mb-3">
-                <label for="parent_id">Category Parent</label>
+                <label for="parent_id">{{ __('Parent') }}</label>
                 <select id="parent_id" name="parent_id" class="form-control @error('parent_id') is-invalid @enderror">
                     <option value="">No Parent</option>
                     @foreach($parents as $parent)

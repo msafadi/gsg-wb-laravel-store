@@ -1,0 +1,20 @@
+{
+    "Email": "البريد الإلكتروني",
+    "Password": "كلمة المرور",
+    "Remember me": "تذكرني",
+    "Log in": "تسجيل الدخول",
+    "Forgot your password?": "هل نسيت كلمة المرور؟",
+    "Whoops! Something went wrong.": "اووبس! يوجد خطأ ما.",
+    "Categories": "التصنيفات",
+    "ID": "المعرّف",
+    "Name": "الاسم",
+    "Parent": "الأب",
+    "Created At": "انشئ في",
+    "Actions": "الإجراءات",
+    "Search": "بحث",
+    "Edit": "تحرير",
+    "Delete": "حذف",
+    "Create": "إنشاء",
+    "Trash": "السلة",
+    "Edit Category": "تعديل التصنيف"
+}

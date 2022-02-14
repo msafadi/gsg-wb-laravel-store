@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Edit Category')
+@section('title', __('Edit Category'))
 
 @section('breadcrumb')
 @parent
-<li class="breadcrumb-item">Categories</li>
-<li class="breadcrumb-item active">Edit</li>
+<li class="breadcrumb-item">{{ __('Categories') }}</li>
+<li class="breadcrumb-item active">{{ __('Edit') }}</li>
 @endsection
 
 @section('content')
