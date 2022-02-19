@@ -21,6 +21,14 @@ class Category extends Model
 
     // protected $guarded = [];
 
+    protected $hidden = [
+        'created_at', 'deleted_at', 'updated_at', 'image',
+    ];
+
+    protected $appends = [
+        'image_url', // getImageUrlAtrribute
+    ];
+
     protected static function booted()
     {
         //static::addGlobalScope(new MainCategoryScope());
