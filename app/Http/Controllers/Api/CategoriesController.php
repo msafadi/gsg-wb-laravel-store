@@ -5,9 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoriesController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +34,12 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        //$user = $request->user();
+        $user = Auth::guard('sanctum')->user();
+        if (!$user->tokenCan('categories.create')) {
+            abort(403, 'You don not access to this resource!');
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'parent_id' => ['nullable', 'int', 'exists:categories,id'],
