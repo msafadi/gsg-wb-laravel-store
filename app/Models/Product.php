@@ -60,6 +60,11 @@ class Product extends Model
         );
     }
 
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
     public function cartUsers()
     {
         return $this->belongsToMany(
