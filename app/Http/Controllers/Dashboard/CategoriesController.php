@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Scopes\MainCategoryScope;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -19,6 +20,12 @@ use Illuminate\Validation\ValidationException;
 
 class CategoriesController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:categories.view')->only('index');
+    }
+    
     public function index(Request $request)
     {
         $search = $request->query('search'); // ?search=watch
@@ -43,6 +50,11 @@ class CategoriesController extends Controller
 
     public function create()
     {
+
+        if (!Gate::allows('categories.create')) {
+            abort(403); // Foribden
+        }
+
         $categories = Category::orderBy('name')->get();
 
         return view('dashboard.categories.create', [
@@ -54,6 +66,10 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
+        if (Gate::denies('categories.create')) {
+            abort(403);
+        }
+
         $rules = $this->rules();
         
         /*$validator = Validator::make($request->all(), $rules);
@@ -113,6 +129,8 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
+        Gate::authorize('categories.update');
+
         // $category = Category::where('id', '=', $id)->dd();
         $category = Category::findOrFail($id);
         // if ($category == null) {
@@ -128,6 +146,8 @@ class CategoriesController extends Controller
 
     public function update(CategoryRequest $request, $id)
     {
+        Gate::authorize('categories.update');
+
         // $rules = $this->rules($id);
         // $request->validate($rules);
 
@@ -171,6 +191,10 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::check('categories.delete')) {
+            abort(403, __('You are not allowed to process action.'));
+        }
+
         $category = Category::withTrashed()->findOrFail($id);
         if ($category->trashed()) {
             $category->forceDelete();

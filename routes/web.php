@@ -66,6 +66,11 @@ Route::group([
         'show' => 'products.show',
     ]);
 
+    Route::resources([
+        'roles' => 'RolesController',
+        'users' => 'UsersController',
+    ]);
+
     Route::prefix('/categories')->as('categories.')->group(function() {
         // CRUD: Create, Read, Update and Delete
         Route::get('/', 'CategoriesController@index')

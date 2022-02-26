@@ -47,14 +47,18 @@
                 <td>{{ $category->parent_name ?? '' }}</td>
                 <td>{{ $category->created_at }}</td>
                 <td>
+                    @if (Auth::user()->can('categories.update'))
                     <a href="{{ route('dashboard.categories.edit', [$category->id]) }}" class="btn btn-sm btn-outline-success">{{ __('Edit') }}</a>
+                    @endif
                 </td>
                 <td>
+                    @can('categories.delete')
                     <form action="{{ route('dashboard.categories.destroy', $category->id) }}" method="post">
                         @csrf
                         @method('delete')
                         <button type="submit" class="btn btn-sm btn-outline-danger">{{ __('Delete') }}</button>
                     </form>
+                    @endcan
                 </td>
             </tr>
             @endforeach

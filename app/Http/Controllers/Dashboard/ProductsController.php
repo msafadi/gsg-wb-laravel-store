@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
@@ -25,6 +26,8 @@ class ProductsController extends Controller
      */
     public function index()
     {
+        Gate::authorize('products.view');
+        
         $products = Product::all();
 
         return view('dashboard.products.index', [
@@ -39,6 +42,8 @@ class ProductsController extends Controller
      */
     public function create()
     {
+        Gate::authorize('products.create');
+
         return view('dashboard.products.create', [
             'product' => new Product(),
             'availabilities' => Product::availabilities(),
@@ -54,6 +59,8 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('products.create');
+        
         $rules = $this->rules();
         $request->validate($rules);
 
@@ -92,6 +99,8 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
+        Gate::authorize('products.update');
+        
         $product = Product::findOrFail($id);
         return view('dashboard.products.edit', [
             'product' => $product,
@@ -109,6 +118,8 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Gate::authorize('products.update');
+        
         $product = Product::findOrFail($id);
 
         $rules = $this->rules();
