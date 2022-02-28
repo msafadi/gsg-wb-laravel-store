@@ -17,18 +17,11 @@
     <div class="ps-shoe__content">
         <div class="ps-shoe__variants">
             <div class="ps-shoe__variant normal">
-                <img src="images/access/1.jpg" alt="">
-                <img src="images/access/2.jpg" alt="">
-                <img src="images/access/3.jpg" alt="">
-                <img src="images/access/4.jpg" alt="">
+                @foreach($product->getMedia('gallery') as $media)
+                <img src="{{ $media->getUrl() }}" alt="">
+                @endforeach
             </div>
-            <select class="ps-rating ps-shoe__rating">
-                <option value="1">1</option>
-                <option value="1">2</option>
-                <option value="1">3</option>
-                <option value="1">4</option>
-                <option value="2">5</option>
-            </select>
+            <x-rating-stars :rating="$product->rating" class="ps-shoe__rating" />
         </div>
         <div class="ps-shoe__detail">
             <a class="ps-shoe__name" href="#">{{ $product->name }}</a>

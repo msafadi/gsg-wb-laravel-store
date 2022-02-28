@@ -15,17 +15,17 @@
                         <div class="ps-product__preview">
                             <div class="ps-product__variants">
                                 <div class="item"><img src="{{ $product->image_url }}" alt=""></div>
-                                <div class="item"><img src="images/shoe-detail/2.jpg" alt=""></div>
-                                <div class="item"><img src="images/shoe-detail/3.jpg" alt=""></div>
-                                <div class="item"><img src="images/shoe-detail/3.jpg" alt=""></div>
-                                <div class="item"><img src="images/shoe-detail/3.jpg" alt=""></div>
+                                @foreach ($product->getMedia('gallery') as $media)
+                                <div class="item"><img src="{{ $media->getUrl() }}" alt=""></div>
+                                @endforeach
                             </div>
                             <a class="popup-youtube ps-product__video" href="http://www.youtube.com/watch?v=0O2aH4XLbto"><img src="{{ $product->image_url }}" alt=""><i class="fa fa-play"></i></a>
                         </div>
                         <div class="ps-product__image">
                             <div class="item"><img class="zoom" src="{{ $product->image_url }}" alt="" data-zoom-image="{{ $product->image_url }}"></div>
-                            <div class="item"><img class="zoom" src="images/shoe-detail/2.jpg" alt="" data-zoom-image="images/shoe-detail/2.jpg"></div>
-                            <div class="item"><img class="zoom" src="images/shoe-detail/3.jpg" alt="" data-zoom-image="images/shoe-detail/3.jpg"></div>
+                            @foreach ($product->getMedia('gallery') as $media)
+                            <div class="item"><img class="zoom" src="{{ $media->getUrl() }}" data-zoom-image="{{ $media->getUrl() }}" alt=""></div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="ps-product__thumbnail--mobile">
@@ -34,11 +34,8 @@
                     </div>
                     <div class="ps-product__info">
                         <div class="ps-product__rating">
-                            <select class="ps-rating">
-                            @for($i = 1; $i <= 5; $i++)
-                            <option value="{{ $i <= $product->rating? 1 : $i }}">{{ $i }}</option>
-                            @endfor
-                            </select><a href="#">(Read all {{ $product->total_reviews }} reviews)</a>
+                            <x-rating-stars :rating="$product->rating" />
+                            <a href="#">(Read all {{ $product->total_reviews }} reviews)</a>
                         </div>
                         <h1>{{ $product->name }}</h1>
                         <p class="ps-product__category">
@@ -112,11 +109,7 @@
                                 <div class="ps-review__thumbnail"><img src="images/user/1.jpg" alt=""></div>
                                 <div class="ps-review__content">
                                     <header>
-                                        <select class="ps-rating">
-                                            @for($i = 1; $i <= 5; $i++)
-                                            <option value="{{ $i <= $review->rating? 1 : $i }}">{{ $i }}</option>
-                                            @endfor
-                                        </select>
+                                        <x-rating-stars :rating="$review->rating" />
                                         <p>By<a href=""> {{ $review->user->name }}</a> - {{ $review->created_at->format('F d, Y') }}</p>
                                     </header>
                                     <p>{{ $review->review }}</p>

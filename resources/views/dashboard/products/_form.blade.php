@@ -108,6 +108,21 @@
                 @enderror
             </div>
             <div class="form-group mb-3">
+                <label for="gallery">Gallery</label>
+                <div class="row">
+                    @foreach($product->getMedia('gallery') as $media)
+                    <div class="col-md-4 mb-2">
+                        <img src="{{ $media->getUrl() }}" class="img-fluid" alt="">
+                        <label class="text-danger"><input type="checkbox" name="delete_media[]" value="{{ $media->id }}"> Delete</label>
+                    </div>
+                    @endforeach
+                </div>
+                <input type="file" id="gallery" name="gallery[]" multiple class="form-control @error('gallery') is-invalid @enderror">
+                @error('gallery')
+                <p class="invalid-feedback">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="form-group mb-3">
                 <label for="tags">Tags</label>
                 <x-form.textarea name="tags" />
             </div>

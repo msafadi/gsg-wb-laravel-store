@@ -10,13 +10,14 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductsController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware(['verified'])->except(['index', 'show']);
+        //$this->middleware(['verified'])->except(['index', 'show']);
     }
 
     /**
@@ -71,6 +72,7 @@ class ProductsController extends Controller
         }
 
         $product = Product::create($data);
+        $this->uploadGallery($product, $request);
 
         return redirect()
             ->route('dashboard.products.index')
@@ -122,7 +124,7 @@ class ProductsController extends Controller
         
         $product = Product::findOrFail($id);
 
-        $rules = $this->rules();
+        $rules = $this->rules($id);
         $request->validate($rules);
 
         $data = $request->except('image');
@@ -137,6 +139,8 @@ class ProductsController extends Controller
                 Storage::disk('public')->delete($old_image);
             }
         });
+
+        $this->uploadGallery($product, $request);
 
         return redirect()
             ->route('dashboard.products.index')
@@ -182,7 +186,7 @@ class ProductsController extends Controller
             ->with('success', "Product ($product->name) restored");
     }
 
-    protected function rules()
+    protected function rules($id = 0)
     {
         return [
             'name' => 'required|string|max:255',
@@ -192,9 +196,10 @@ class ProductsController extends Controller
             'status' => 'in:active,draft,archived',
             'availability' => 'in:in-stock,out-of-stock,back-order',
             'quantity' => 'nullable|int|min:0',
-            'sku' => 'nullable|string|unique:products,sku',
-            'barcode' => 'nullable|string|unique:products,barcode',
+            'sku' => "nullable|string|unique:products,sku,$id",
+            'barcode' => "nullable|string|unique:products,barcode,$id",
             'image' => 'nullable|image',
+            'delete_media' => 'array',
         ];
     }
 
@@ -203,5 +208,20 @@ class ProductsController extends Controller
         return $file->store('thumbnails', [
             'disk' => 'public'
         ]);
-    }    
+    }
+
+    protected function uploadGallery(Product $product, Request $request)
+    {
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $product->addMedia($file->path())
+                        ->toMediaCollection('gallery');
+            }
+        }
+
+        $delete = $request->post('delete_media');
+        if ($delete) {
+            Media::destroy($delete);
+        }
+    }
 }

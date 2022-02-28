@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
 @parent
-<li class="breadcrumb-item">Categories</li>
+<li class="breadcrumb-item">Products</li>
 <li class="breadcrumb-item active">Create</li>
 @endsection
 
