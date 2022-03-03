@@ -1,3 +1,21 @@
+@push('css')
+<link rel="stylesheet" href="{{ asset('assets/store/plugins/revolution/css/settings.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/store/plugins/revolution/css/layers.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/store/plugins/revolution/css/navigation.css') }}">
+@endpush
+
+@push('js')
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx39JFH5nhxze1ZydH-Kl8xXM3OK4fvcg&amp;region=GB"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
+@endpush
+
 <x-store-layout title="Home">
 
     <div class="ps-banner">

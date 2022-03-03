@@ -28,20 +28,19 @@
     <link rel="stylesheet" href="{{ asset('assets/store/plugins/bootstrap-select/dist/css/bootstrap-select.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/store/plugins/Magnific-Popup/dist/magnific-popup.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/store/plugins/jquery-ui/jquery-ui.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/store/plugins/revolution/css/settings.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/store/plugins/revolution/css/layers.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/store/plugins/revolution/css/navigation.css') }}">
     <!-- Custom-->
-    <link rel="stylesheet" href="{{ asset('assets/store/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/store/css/style.css?v=2') }}">
     <!--HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
     <!--WARNING: Respond.js doesn't work if you view the page via file://-->
     <!--[if lt IE 9]><script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script><script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]-->
+
+    @stack('css')        
 </head>
 <!--[if IE 7]><body class="ie7 lt-ie8 lt-ie9 lt-ie10"><![endif]-->
 <!--[if IE 8]><body class="ie8 lt-ie9 lt-ie10"><![endif]-->
 <!--[if IE 9]><body class="ie9 lt-ie10"><![endif]-->
 
-<body class="ps-loading">
+<body class="">
     <div class="header--sidebar"></div>
     <header class="header">
         <div class="header__top">
@@ -332,17 +331,9 @@
     <script type="text/javascript" src="{{ asset('assets/store/plugins/elevatezoom/jquery.elevatezoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/store/plugins/Magnific-Popup/dist/jquery.magnific-popup.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/store/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx39JFH5nhxze1ZydH-Kl8xXM3OK4fvcg&amp;region=GB"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/store/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
     <!-- Custom scripts-->
     <script type="text/javascript" src="{{ asset('assets/store/js/main.js') }}"></script>
+    @stack('js')
 </body>
 
 </html>

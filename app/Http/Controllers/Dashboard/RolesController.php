@@ -91,10 +91,13 @@ class RolesController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'permissions' => 'required|array',
+            'permissions' => 'array',
         ]);
 
-        $role->update($request->all());
+        $role->update([
+            'name' => $request->post('name'),
+            'permissions' => $request->post('permissions', []),
+        ]);
 
         return redirect()
             ->route('dashboard.roles.index')
