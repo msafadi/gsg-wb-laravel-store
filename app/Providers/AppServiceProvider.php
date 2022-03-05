@@ -3,13 +3,16 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Repositories\Cart\CartRepository;
-use App\Repositories\Cart\DatabaseRepository;
 use Illuminate\Support\Str;
+use PayPalHttp\Environment;
 use Illuminate\Support\Facades\App;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Cart\CartRepository;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use App\Repositories\Cart\DatabaseRepository;
+use PayPalCheckoutSdk\Core\SandboxEnvironment;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +34,20 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(CartRepository::class, function($app) {
             return new DatabaseRepository($app->make('cart.cookie_id'));
+        });
+
+        $this->app->singleton('paypal.client', function ($app) {
+            $clientId = config('services.paypal.client_id');
+            $clientSecret = config('services.paypal.client_secret');
+
+            if (config('services.paypal.env') == 'sandbox') {
+                $environment = new SandboxEnvironment($clientId, $clientSecret);
+            } else {
+                $environment = new Environment($clientId, $clientSecret);
+            }
+
+            $client = new PayPalHttpClient($environment);
+            return $client;
         });
 
         // $this->app->bind('date', function($app) {

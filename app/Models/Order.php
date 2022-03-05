@@ -16,6 +16,10 @@ class Order extends Model
         'payment_method', 'payment_transaction_id', 'payment_data'
     ];
 
+    protected $casts = [
+        'payment_data' => 'json',
+    ];
+
     protected static function booted()
     {
         static::creating(function(Order $order) {

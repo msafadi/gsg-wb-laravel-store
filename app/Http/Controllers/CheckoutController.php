@@ -40,7 +40,7 @@ class CheckoutController extends Controller
             // 2: Add Order Addresses
             $this->storeAddresses($order, $request);
             // 3: Empty Cart
-            // $cart->empty();
+            $cart->empty();
             // 4: Commit
             DB::commit();
 
@@ -52,7 +52,7 @@ class CheckoutController extends Controller
         // event('order.created', [$cart, Auth::user()]);
         event( new OrderCreated($order) );
 
-        return redirect()->route('home')->with('success', 'Order created');
+        return redirect()->route('payments.create', $order->id);
     }
 
     protected function storeOrder(Request $request, CartRepository $cart)
