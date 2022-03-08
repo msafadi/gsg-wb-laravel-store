@@ -50,11 +50,11 @@ class AppServiceProvider extends ServiceProvider
             return $client;
         });
 
-        // $this->app->bind('date', function($app) {
-        //     return function($time) {
-        //         return date('d/m/Y', $time);
-        //     };
-        // });
+        if ($this->app->environment('production')) {
+            $this->app->bind('path.public', function($app) {
+                return base_path('public_html');
+            });
+        }
     }
 
     /**

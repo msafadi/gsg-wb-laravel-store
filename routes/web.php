@@ -15,6 +15,9 @@ use App\Http\Controllers\Dashboard\NotificationsController;
 use App\Http\Controllers\PaymentsController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\ProductsController as StoreProductsController;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,4 +144,12 @@ Route::get('/images/{image}', function($image) {
     return Response::file(Storage::path($image));
 
     //return Storage::download('dummy.txt');
+});
+
+Route::get('/artisan/{command}', function($command) {
+    Artisan::call($command);
+});
+
+Route::get('test/mail', function() {
+    Mail::to('eng.msafadi@gmail.com')->send(new TestMail);
 });

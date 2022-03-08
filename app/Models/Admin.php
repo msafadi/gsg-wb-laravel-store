@@ -10,4 +10,9 @@ use Laravel\Sanctum\HasApiTokens;
 class Admin extends User
 {
     use HasFactory, Notifiable, HasApiTokens;
+
+    public function hasPermission($permission)
+    {
+        return true;
+    }
 }

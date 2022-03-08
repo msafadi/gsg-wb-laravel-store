@@ -44,7 +44,7 @@ return [
 
         'uploads' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
+            'root' => env('APP_ENV') == 'production'? base_path('public_html/uploads') : public_path('uploads'),
             'url' => env('APP_URL').'/uploads',
             'visibility' => 'public',
         ],
@@ -74,6 +74,7 @@ return [
     */
 
     'links' => [
+        //base_path('public_html/storage') => storage_path('app/public'),
         public_path('storage') => storage_path('app/public'),
     ],
 
