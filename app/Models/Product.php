@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\ProductObserver;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
@@ -28,19 +29,7 @@ class Product extends Model implements HasMedia
 
     protected static function booted()
     {
-        /*
-        creating, created, updating, updated, saving, saved
-        deleting, deleted, restoring, resotred, forceDeleting, forceDeleted
-        */
-        static::forceDeleted(function($product) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-        });
-
-        static::saving(function($product) {
-            $product->slug = Str::slug($product->name);
-        });
+        static::observe(ProductObserver::class);
     }
 
     // Inverse One-to-Many: Product Belongs To Category

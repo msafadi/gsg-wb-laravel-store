@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -46,6 +52,10 @@ class UsersController extends Controller
             'name' => 'required',
             'roles' => 'required|array',
         ]);
+
+        if ($request->post('type') == 'super-admin') {
+            $this->authorize('create-super-admin', User::class);
+        } 
 
         $user = User::create($request->all());
 

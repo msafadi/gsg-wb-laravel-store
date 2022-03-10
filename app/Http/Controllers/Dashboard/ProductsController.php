@@ -27,7 +27,8 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        Gate::authorize('products.view');
+        //Gate::authorize('products.view');
+        $this->authorize('view-any', Product::class);
         
         $products = Product::all();
 
@@ -43,7 +44,8 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        Gate::authorize('products.create');
+        //Gate::authorize('products.create');
+        $this->authorize('create', Product::class);
 
         return view('dashboard.products.create', [
             'product' => new Product(),
@@ -60,7 +62,8 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        Gate::authorize('products.create');
+        //Gate::authorize('products.create');
+        $this->authorize('create', Product::class);       
         
         $rules = $this->rules();
         $request->validate($rules);
@@ -87,6 +90,8 @@ class ProductsController extends Controller
      */
     public function show(Product $product)
     {
+        $this->authorize('view', $product);
+
         //$product = Product::findOrFail($id);
         return view('dashboard.products.show', [
             'product' => $product,
@@ -101,9 +106,12 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        Gate::authorize('products.update');
+        //Gate::authorize('products.update');
         
         $product = Product::findOrFail($id);
+
+        $this->authorize('update', $product);
+
         return view('dashboard.products.edit', [
             'product' => $product,
             'availabilities' => Product::availabilities(),
@@ -120,9 +128,11 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Gate::authorize('products.update');
+        //Gate::authorize('products.update');
         
         $product = Product::findOrFail($id);
+        
+        $this->authorize('update', $product);
 
         $rules = $this->rules($id);
         $request->validate($rules);
@@ -156,9 +166,12 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
+
         if ($product->trashed()) {
+            $this->authorize('force-delete', $product);
             $product->forceDelete();
         } else {
+            $this->authorize('delete', $product);
             $product->delete();
         }
 
@@ -178,6 +191,8 @@ class ProductsController extends Controller
     public function restore(Request $request, $id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
+
+        $this->authorize('restore', $product);
 
         $product->restore();
 
