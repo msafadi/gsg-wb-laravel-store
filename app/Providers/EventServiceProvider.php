@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\OrderCreated;
+use App\Listeners\ClearSettingsCache;
 use App\Listeners\DeleteCartCookieId;
 use App\Listeners\SendOrderCreatedEmailToAdmin;
 use App\Listeners\SendOrderCreatedNotification;
@@ -39,6 +40,9 @@ class EventServiceProvider extends ServiceProvider
         OrderCreated::class => [
             SendOrderCreatedNotification::class,
             //SendOrderCreatedEmailToAdmin::class,
+        ],
+        'settings.updated' => [
+            ClearSettingsCache::class
         ],
     ];
 

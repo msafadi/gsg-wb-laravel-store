@@ -9,6 +9,6 @@ class Money
     public static function format($value)
     {
         $formatter = new NumberFormatter('en', NumberFormatter::CURRENCY);
-        return $formatter->formatCurrency($value, 'ILS');
+        return $formatter->formatCurrency($value, config('app.currency'));
     }
 }

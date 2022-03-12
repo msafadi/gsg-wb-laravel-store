@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Auth\ChangeUserPasswordController;
 use App\Http\Controllers\Dashboard\NotificationsController;
+use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\PaymentsController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\ProductsController as StoreProductsController;
@@ -65,6 +66,11 @@ Route::group([
 
     Route::get('/', [DashboardController::class, 'index'])
         ->name('index');
+
+    Route::get('/settings', [SettingsController::class, 'edit'])
+        ->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])
+        ->name('settings.update');
     
     Route::get('notifications', [NotificationsController::class, 'index'])->name('notifications');
     Route::get('notifications/{notification}', [NotificationsController::class, 'read'])->name('notifications.read');
