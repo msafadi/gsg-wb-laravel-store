@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AccessTokensController;
 use App\Http\Controllers\Api\CategoriesController;
+use App\Http\Controllers\Api\OtpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,3 +31,8 @@ Route::apiResources([
 Route::post('access/tokens', [AccessTokensController::class, 'store']);
 Route::delete('access/tokens/{token?}', [AccessTokensController::class, 'destroy'])
     ->middleware('auth:sanctum');
+
+Route::post('otp/create', [OtpController::class, 'store'])
+    ->middleware('guest:sanctum');
+Route::post('otp/verify', [OtpController::class, 'verify'])
+    ->middleware('guest:sanctum');
